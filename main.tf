@@ -19,7 +19,7 @@ provider "aws" {
   region = "us-west-2"
 }
 
-resource "random_pet" "sg" {}
+resource "random_pet" "sg1" {}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -37,10 +37,10 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-resource "aws_instance" "web" {
+resource "aws_instance" "web1" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.web-sg.id]
+  vpc_security_group_ids = [aws_security_group.web-sg1.id]
 
   user_data = <<-EOF
               #!/bin/bash
@@ -52,8 +52,8 @@ resource "aws_instance" "web" {
               EOF
 }
 
-resource "aws_security_group" "web-sg" {
-  name = "${random_pet.sg.id}-sg"
+resource "aws_security_group" "web-sg1" {
+  name = "${random_pet.sg1.id}-sg"
   ingress {
     from_port   = 8080
     to_port     = 8080
@@ -70,5 +70,5 @@ resource "aws_security_group" "web-sg" {
 }
 
 output "web-address" {
-  value = "${aws_instance.web.public_dns}:8080"
+  value = "${aws_instance.web1.public_dns}:8080"
 }
